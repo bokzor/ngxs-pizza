@@ -34,7 +34,7 @@
     <div class="pizza-form__actions">
       <button
         type="button"
-        class="btn btn__ok"
+        class="create_button btn btn__ok"
         *ngIf="!exists"
         (click)="createPizza(form)">
         Create Pizza
@@ -42,7 +42,7 @@
 
       <button
         type="button"
-        class="btn btn__ok"
+        class="update_button btn btn__ok"
         *ngIf="exists"
         (click)="updatePizza(form)">
         Save changes

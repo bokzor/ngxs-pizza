@@ -92,24 +92,23 @@ export class PizzasState implements NgxsOnInit {
         pizzas: updateItem<Pizza>(pizza => pizza.id === action.pizza.id, action.pizza)
       })
     );
-    // return this.pizzasService.updatePizza(action.pizza).subscribe(() => {
-    //   ctx.dispatch(new Navigate([`/products`]));
-    // });
+    return this.pizzasService.updatePizza(action.pizza).subscribe(() => {
+      ctx.dispatch(new Navigate([`/products`]));
+    });
   }
 
   @Action(PizzasAction.Delete)
   deletePizza(ctx: StateContext<PizzasStateModel>, action: PizzasAction.Delete) {
     const remove = window.confirm('Are you sure?');
     if (remove) {
-      ctx.patchState({pizzas: []});
       ctx.setState(
         patch({
           pizzas: removeItem<Pizza>(pizza => pizza.id === action.pizza.id)
         })
       );
-      // return this.pizzasService.removePizza(action.pizza).subscribe(() => {
-      //   ctx.dispatch(new Navigate([`/products`]));
-      // });
+      return this.pizzasService.removePizza(action.pizza).subscribe(() => {
+        ctx.dispatch(new Navigate([`/products`]));
+      });
     }
   }
 

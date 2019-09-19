@@ -5,13 +5,13 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
-  ChangeDetectionStrategy, OnInit,
+  ChangeDetectionStrategy, OnInit
 } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   FormBuilder,
-  Validators,
+  Validators
 } from '@angular/forms';
 
 import { distinctUntilChanged, map } from 'rxjs/operators';
@@ -36,10 +36,10 @@ export class PizzaFormComponent implements OnInit {
   @Output() remove = new EventEmitter<Pizza>();
 
   form = this.fb.group({
-    id : [],
+    id: [],
     name: ['', Validators.required],
     toppings: [[]],
-    sizes: [[]],
+    sizes: [[]]
   });
 
   constructor(private fb: FormBuilder) {
@@ -60,36 +60,34 @@ export class PizzaFormComponent implements OnInit {
     ).subscribe((pizza) => {
       if (pizza && pizza.id) {
         this.exists = true;
-        this.form.patchValue(pizza, {emitEvent: false});
+        this.form.patchValue(pizza, { emitEvent: false });
       }
     });
 
     this.form
       .valueChanges.pipe(
       distinctUntilChanged()
-    )
-      .subscribe(value => {
+    ).subscribe(value => {
         this.valueChanges.emit(value);
       });
   }
 
   createPizza(form: FormGroup) {
-    const {value, valid} = form;
+    const { value, valid } = form;
     if (valid) {
       this.create.emit(value);
     }
   }
 
   updatePizza(form: FormGroup) {
-    const {value, valid, touched} = form;
+    const { value, valid, touched } = form;
     if (touched && valid) {
       this.update.emit(value);
     }
   }
 
   removePizza(form: FormGroup) {
-    const {value} = form;
-    console.log(value);
+    const { value } = form;
     this.remove.emit(value);
   }
 }
