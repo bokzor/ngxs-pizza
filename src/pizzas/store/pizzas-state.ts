@@ -16,11 +16,10 @@ export interface PizzasStateModel {
 
 @State<PizzasStateModel>({
   name: 'pizzas',
-  defaults: {pizzas: [], selectedPizza: null, toppings: [], pizzasLoading: false}
+  defaults: { pizzas: [], selectedPizza: null, toppings: [], pizzasLoading: false }
 })
 export class PizzasState implements NgxsOnInit {
   constructor(
-    private router: Router,
     private pizzasService: PizzasService,
     private toppingsService: ToppingsService) {
   }
@@ -52,29 +51,29 @@ export class PizzasState implements NgxsOnInit {
 
   @Action(PizzasAction.List)
   listPizzas(ctx: StateContext<PizzasStateModel>) {
-    ctx.patchState({pizzasLoading: true});
+    ctx.patchState({ pizzasLoading: true });
     return this.pizzasService.getPizzas().pipe(
       tap(pizzas => {
-        ctx.patchState({pizzas: pizzas, pizzasLoading: false});
+        ctx.patchState({ pizzas, pizzasLoading: false });
       })
     );
   }
 
   @Action(PizzasAction.Get)
-  getPizza({patchState}, action: PizzasAction.Get) {
-    patchState({pizzasLoading: true});
+  getPizza({ patchState }, action: PizzasAction.Get) {
+    patchState({ pizzasLoading: true });
     return this.pizzasService.getPizzas().pipe(
       tap(pizzas => {
-        patchState({pizzasLoading: false, selectedPizza: pizzas.find(pizza => pizza.id === +action.id)});
+        patchState({ pizzasLoading: false, selectedPizza: pizzas.find(pizza => pizza.id === +action.id) });
       })
     );
   }
 
   @Action(PizzasAction.Toppings)
-  getToppings({patchState}) {
+  getToppings({ patchState }) {
     return this.toppingsService.getToppings().pipe(
       tap(toppings => {
-        patchState({toppings});
+        patchState({ toppings });
       })
     );
   }
@@ -93,26 +92,29 @@ export class PizzasState implements NgxsOnInit {
         pizzas: updateItem<Pizza>(pizza => pizza.id === action.pizza.id, action.pizza)
       })
     );
-    return this.pizzasService.updatePizza(action.pizza).subscribe(() => {
-      ctx.dispatch(new Navigate([`/products`]));
-    });
+    // return this.pizzasService.updatePizza(action.pizza).subscribe(() => {
+    //   ctx.dispatch(new Navigate([`/products`]));
+    // });
   }
 
   @Action(PizzasAction.Delete)
   deletePizza(ctx: StateContext<PizzasStateModel>, action: PizzasAction.Delete) {
     const remove = window.confirm('Are you sure?');
     if (remove) {
-      patch({
-        pizzas: removeItem<Pizza>(pizza => pizza.id === action.pizza.id)
-      });
-      return this.pizzasService.removePizza(action.pizza).subscribe(() => {
-        ctx.dispatch(new Navigate([`/products`]));
-      });
+      ctx.patchState({pizzas: []});
+      ctx.setState(
+        patch({
+          pizzas: removeItem<Pizza>(pizza => pizza.id === action.pizza.id)
+        })
+      );
+      // return this.pizzasService.removePizza(action.pizza).subscribe(() => {
+      //   ctx.dispatch(new Navigate([`/products`]));
+      // });
     }
   }
 
   @Action(PizzasAction.UpdatePizzaForm)
-  toggleTopping({patchState}, action: PizzasAction.UpdatePizzaForm) {
-    patchState({selectedPizza: action.pizza});
+  toggleTopping({ patchState }, action: PizzasAction.UpdatePizzaForm) {
+    patchState({ selectedPizza: action.pizza });
   }
 }

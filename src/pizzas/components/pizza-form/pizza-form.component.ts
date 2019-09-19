@@ -55,10 +55,12 @@ export class PizzaFormComponent implements OnInit {
 
   ngOnInit() {
 
-    this.pizza$.subscribe((pizza) => {
+    this.pizza$.pipe(
+      distinctUntilChanged()
+    ).subscribe((pizza) => {
       if (pizza && pizza.id) {
         this.exists = true;
-        this.form.patchValue(pizza);
+        this.form.patchValue(pizza, {emitEvent: false});
       }
     });
 
