@@ -1,0 +1,15 @@
+<div
+  *appComponentLoading="loading$ | async"
+  class="product-item">
+  <pizza-form
+    [pizza$]="selectedPizza$"
+    [toppings]="toppings$ | async"
+    (update)="onUpdate($event)"
+    (remove)="onRemove($event)"
+    (valueChanges)="onValueChanges($event)"
+  >
+    <pizza-display
+      [pizza]="selectedPizza$ | async">
+    </pizza-display>
+  </pizza-form>
+</div>
